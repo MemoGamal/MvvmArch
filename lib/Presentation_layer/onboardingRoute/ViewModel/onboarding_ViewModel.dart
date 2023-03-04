@@ -39,44 +39,18 @@ class OnboardingViewModel extends BaseViewModel
 
   @override
   void onPageChanged(int index) {
-    currentIndex = Onboarding_view.CurrentIndex;
+    currentIndex = index;
+    print("CurrentIndex in modelView is $currentIndex");
   }
 
-  @override
-  // TODO: implement onboardingViewModelSink
-  Sink get inputViewObjectOnBoarding => _streamController.sink;
-
-  // Output Controller..
-
-  @override
-  // TODO: implement outputViewObjectOnBoarding
-  Stream get outputViewObjectOnBoarding =>
-      _streamController.stream.map((event) => event);
-}
-
-// Represents Orders Received by ViewModel from view..
-abstract class OnboardingViewModelInputs {
-  // To Go TO next Page When User clicks right arrow or swipe..
-
-  void goNext();
-
-  // To Go TO previous Page When User clicks left arrow or swipe..
-
-  void goPrevious();
-
-  // To Go TO Page When User clicks left arrow or swipe..
-
-  void onPageChanged(int index);
-  // Sink for stream Controller Input..
-
-  Sink get inputViewObjectOnBoarding;
-
-  // onboarding Private Section..
+// onboarding Private Section..
   int currentIndex = 0;
+
   Map tempMap = {};
 
   // Create the starting fun..
   postDataToUI() {
+    // Stream Listening..
     inputViewObjectOnBoarding.add(tempMap);
   }
 
@@ -114,17 +88,46 @@ abstract class OnboardingViewModelInputs {
           ImageAssets.onBoardingImage4,
         ]);
         tempMap.addAll({3: tempListOfData});
+      } else {
+        // In Case We edited number of splash pages..
       }
     }
   }
+
+  // Sinking..
+
+  @override
+  // TODO: implement onboardingViewModelSink
+  Sink get inputViewObjectOnBoarding => _streamController.sink;
+
+  // Output Controller..
+
+  @override
+  // TODO: implement outputViewObjectOnBoarding
+  Stream get outputViewObjectOnBoarding =>
+      _streamController.stream.map((event) => event);
+}
+
+// Represents Orders Received by ViewModel from view..
+abstract class OnboardingViewModelInputs {
+  // To Go TO next Page When User clicks right arrow or swipe..
+
+  void goNext();
+
+  // To Go TO previous Page When User clicks left arrow or swipe..
+
+  void goPrevious();
+
+  // To Go TO Page When User clicks left arrow or swipe..
+
+  void onPageChanged(int index);
+  // Sink for stream Controller Input..
+
+  Sink get inputViewObjectOnBoarding;
 }
 
 abstract class OnboardingViewModelOutputs {
   // Sink for stream Controller Output..
 
   Stream get outputViewObjectOnBoarding;
-
-  void Test() {
-    outputViewObjectOnBoarding.forEach((element) {print(element)});
-  }
 }

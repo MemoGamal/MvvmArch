@@ -5,7 +5,7 @@ abstract class BaseViewModel extends BaseViewModelInputs
 
 abstract class BaseViewModelInputs {
   // Start BaseViewModel..
-  void start(int? currentIndex);
+  void start();
 
   //Dispose To End BaseViewModel..
   void dispose();
