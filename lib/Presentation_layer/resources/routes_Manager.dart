@@ -1,14 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mvvm_clean_architicture/Presentation_layer/forgetPasswordRoute/forgetPassword_view.dart';
-import 'package:mvvm_clean_architicture/Presentation_layer/loginRoute/login_View.dart';
-import 'package:mvvm_clean_architicture/Presentation_layer/mainRoute/mainView.dart';
+import 'package:mvvm_clean_architicture/Presentation_layer/loginRoute/view/login_View.dart';
 import 'package:mvvm_clean_architicture/Presentation_layer/onboardingRoute/View/onbarding_view.dart';
 import 'package:mvvm_clean_architicture/Presentation_layer/registerRoute/register_view.dart';
 import 'package:mvvm_clean_architicture/Presentation_layer/resources/Strings_Manager.dart';
 import 'package:mvvm_clean_architicture/Presentation_layer/resources/routes_Manager.dart';
 import 'package:mvvm_clean_architicture/Presentation_layer/splashRoute/splash_view.dart';
 import 'package:mvvm_clean_architicture/Presentation_layer/storeDetailsRoute/storeDetailsView.dart';
+
+import '../mainRoute/view/mainView.dart';
 
 class routes {
   static const String splashRoute = "/";
@@ -29,7 +30,7 @@ class routeManager {
         }
       case routes.onBording:
         {
-          return MaterialPageRoute(builder: (_) => const Onboarding_view());
+          return MaterialPageRoute(builder: (_) => const onboarding_view());
         }
       case routes.loginRoute:
         {

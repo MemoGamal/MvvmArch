@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mvvm_clean_architicture/Presentation_layer/onboardingRoute/ViewModel/onboarding_ViewModel.dart';
 import 'package:mvvm_clean_architicture/Presentation_layer/resources/routes_Manager.dart';
 
 import '../../resources/Color_Manager.dart';
@@ -12,9 +13,9 @@ import '../../resources/constants_Manager.dart';
 
 class BottomBar extends StatelessWidget {
   final int currentIndex;
-  final CarouselController carouselController;
+  final onboardingViewModel;
   const BottomBar({
-    required this.carouselController,
+    required this.onboardingViewModel,
     required this.currentIndex,
     super.key,
   });
@@ -41,7 +42,7 @@ class BottomBar extends StatelessWidget {
                 ),
               ),
               onTap: () {
-                carouselController.previousPage();
+                onboardingViewModel.goPrevious();
               },
             ),
           ),
@@ -88,10 +89,7 @@ class BottomBar extends StatelessWidget {
                 ),
               ),
               onTap: () {
-                carouselController.nextPage();
-                if (currentIndex == AppConstants.onboardingNumberOfPages - 1) {
-                  Navigator.of(context).pushReplacementNamed(routes.mainRoute);
-                }
+                onboardingViewModel.goNext(context);
               },
             ),
           ),

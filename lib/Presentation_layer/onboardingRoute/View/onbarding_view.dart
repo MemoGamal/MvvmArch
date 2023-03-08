@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mvvm_clean_architicture/Presentation_layer/mainRoute/view/mainView.dart';
 import 'package:mvvm_clean_architicture/Presentation_layer/onboardingRoute/ViewModel/onboarding_ViewModel.dart';
 import 'package:mvvm_clean_architicture/Presentation_layer/resources/Strings_Manager.dart';
 import 'package:mvvm_clean_architicture/Presentation_layer/resources/constants_Manager.dart';
@@ -13,19 +14,18 @@ import '../../resources/Value_Manager.dart';
 import '../Widgets/Bottom_Bar.dart';
 import '../Widgets/skip_Fun.dart';
 
-class Onboarding_view extends StatefulWidget {
-  const Onboarding_view({super.key});
+class onboarding_view extends StatefulWidget {
+  const onboarding_view({super.key});
   static final CarouselController carouselController = CarouselController();
 
   @override
-  State<Onboarding_view> createState() => _Onboarding_viewState();
+  State<onboarding_view> createState() => _onboarding_viewState();
 }
 
-class _Onboarding_viewState extends State<Onboarding_view> {
+class _onboarding_viewState extends State<onboarding_view> {
   // OnboardingViewModel is instance of Model To access Class Members.. Logic..
 
   static final OnboardingViewModel onboardingViewModel = OnboardingViewModel();
-
   //Binding Func..
   void _bind() {
     onboardingViewModel.start();
@@ -40,43 +40,37 @@ class _Onboarding_viewState extends State<Onboarding_view> {
 
   @override
   Widget build(BuildContext context) {
-    return CarouselSlider.builder(
-      itemCount: AppConstants.onboardingNumberOfPages,
-      itemBuilder: (context, index, realIndex) {
-        return StreamBuilder(
-          stream: onboardingViewModel.outputViewObjectOnBoarding,
-          builder: (context, snapshot) {
-            return _getContentWidget(
-                context, snapshot.data, onboardingViewModel);
-          },
-        );
+    return StreamBuilder(
+      stream: onboardingViewModel.outputViewObjectOnBoarding,
+      builder: (context, snapshot) {
+        return carouselWidget(context, snapshot.data, onboardingViewModel);
       },
-      options: CarouselOptions(
-        onPageChanged: (index, reason) {
-          onboardingViewModel.onPageChanged(index);
-          print(onboardingViewModel.currentIndex);
-        },
-        height: MediaQuery.of(context).size.height,
-        autoPlay: false,
-        enableInfiniteScroll: false,
-        viewportFraction: 1,
-      ),
-      carouselController: Onboarding_view.carouselController,
     );
   }
 }
 
 // _getContentWidget is Widget for UI.. Seperated From Logic..
+Widget carouselWidget(BuildContext context, data, onboardingViewModel) {
+  return PageView.builder(
+    itemCount: AppConstants.onboardingNumberOfPages,
+    onPageChanged: (value) {
+      onboardingViewModel.onPageChanged(value);
+    },
+    itemBuilder: (context, index) {
+      return _getContentWidget(context, data, onboardingViewModel);
+    },
+    controller: onboardingViewModel.pageController,
+  );
+}
 
 Widget _getContentWidget(BuildContext context, data, onboardingViewModel) {
-  print(
-      "onboardingViewModel.currentIndex is ${onboardingViewModel.currentIndex}");
   final CarouselController carouselController = CarouselController();
   if (data == null) {
     return Container();
   } else {
     return Scaffold(
       backgroundColor: ColorManager.white,
+      //AppBar..
       appBar: AppBar(
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: ColorManager.black,
@@ -85,22 +79,23 @@ Widget _getContentWidget(BuildContext context, data, onboardingViewModel) {
         elevation: AppSize.s0,
         backgroundColor: ColorManager.white,
       ),
+      // BottomSheet..
       bottomSheet: SizedBox(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           mainAxisSize: MainAxisSize.min,
           children: [
             SkIPFun(
-              currentIndex: onboardingViewModel.currentIndex,
-              carouselController: carouselController,
+              onboardingViewModel: onboardingViewModel,
             ),
             BottomBar(
               currentIndex: onboardingViewModel.currentIndex,
-              carouselController: carouselController,
+              onboardingViewModel: onboardingViewModel,
             ),
           ],
         ),
       ),
+      // Body..
       body: SizedBox(
         width: MediaQuery.of(context).size.width,
         child: Column(
@@ -110,7 +105,8 @@ Widget _getContentWidget(BuildContext context, data, onboardingViewModel) {
               padding: EdgeInsets.all(AppPading.p40),
             ),
             Text(
-              data[0][0],
+              data[0],
+              // Zero Because it's first item in list Pushed In Stream..
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.displayLarge,
             ),
@@ -118,7 +114,9 @@ Widget _getContentWidget(BuildContext context, data, onboardingViewModel) {
               padding: EdgeInsets.all(AppPading.p8),
             ),
             Text(
-              data[1][0],
+              data[1],
+              // one Because it's 2nd item in list Pushed In Stream..
+
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.titleMedium,
             ),
@@ -126,7 +124,8 @@ Widget _getContentWidget(BuildContext context, data, onboardingViewModel) {
               padding: EdgeInsets.all(AppPading.p8),
             ),
             SvgPicture.asset(
-              data[onboardingViewModel.currentIndex][2],
+              data[2],
+              // 2 Because it's Third item in list Pushed In Stream..
             ),
           ],
         ),
